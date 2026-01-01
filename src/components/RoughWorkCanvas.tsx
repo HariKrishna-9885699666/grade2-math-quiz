@@ -15,17 +15,10 @@ interface RoughWorkCanvasProps {
 export const RoughWorkCanvas = ({ isOpen, onClose, currentQuestion }: RoughWorkCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [brushColor, setBrushColor] = useState("#1565C0");
-  const [brushSize, setBrushSize] = useState(3);
 
-  const colors = [
-    "#1565C0", // Blue
-    "#F44336", // Red
-    "#4CAF50", // Green
-    "#FF9800", // Orange
-    "#9C27B0", // Purple
-    "#333333", // Dark gray
-  ];
+  // Fixed brush color and size for simplicity and better mobile UX
+  const brushColor = "#222";
+  const brushSize = 3;
 
   const getContext = useCallback(() => {
     const canvas = canvasRef.current;
@@ -125,9 +118,9 @@ export const RoughWorkCanvas = ({ isOpen, onClose, currentQuestion }: RoughWorkC
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm animate-scale-in">
+    <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm animate-scale-in flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-card">
+      <div className="flex items-center justify-between p-3 border-b border-border bg-card">
         <div className="flex items-center gap-2">
           <Pencil className="w-5 h-5 text-primary" />
           <h2 className="font-bold text-lg text-primary">Rough Work</h2>
@@ -161,54 +154,12 @@ export const RoughWorkCanvas = ({ isOpen, onClose, currentQuestion }: RoughWorkC
         </div>
       )}
 
-      {/* Toolbar */}
-      <div className="flex items-center justify-center gap-4 p-3 bg-card/80 border-b border-border">
-        {/* Colors */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground mr-1">Color:</span>
-          {colors.map((color) => (
-            <button
-              key={color}
-              className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${
-                brushColor === color ? "border-foreground scale-110" : "border-transparent"
-              }`}
-              style={{ backgroundColor: color }}
-              onClick={() => setBrushColor(color)}
-              aria-label={`Select ${color} color`}
-            />
-          ))}
-        </div>
-
-        {/* Separator */}
-        <div className="w-px h-8 bg-border" />
-
-        {/* Brush size */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground">Size:</span>
-          {[2, 4, 8].map((size) => (
-            <button
-              key={size}
-              className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-transform hover:scale-110 ${
-                brushSize === size ? "border-primary bg-secondary" : "border-border"
-              }`}
-              onClick={() => setBrushSize(size)}
-              aria-label={`Select brush size ${size}`}
-            >
-              <div
-                className="rounded-full bg-foreground"
-                style={{ width: size * 2, height: size * 2 }}
-              />
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Canvas container */}
-      <div className={`flex-1 p-4 overflow-hidden ${currentQuestion ? 'h-[calc(100vh-230px)]' : 'h-[calc(100vh-140px)]'}`}>
-        <div className="w-full h-full bg-card rounded-xl shadow-card overflow-hidden">
+      {/* Canvas container - responsive and fills available space */}
+      <div className="flex-1 min-h-0 flex flex-col p-2 sm:p-4">
+        <div className="w-full h-full bg-card rounded-xl shadow-card overflow-hidden flex-1">
           <canvas
             ref={canvasRef}
-            className="w-full h-full touch-none cursor-crosshair"
+            className="w-full h-full min-h-[200px] max-h-[60vh] sm:max-h-full touch-none cursor-crosshair block"
             onMouseDown={startDrawing}
             onMouseMove={draw}
             onMouseUp={stopDrawing}
