@@ -15,7 +15,7 @@ const Index = () => {
   const [appState, setAppState] = useState<AppState>("start");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, number>>({});
   const [isCanvasOpen, setIsCanvasOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -33,11 +33,11 @@ const Index = () => {
     setAppState("assessment");
   }, []);
 
-  const handleSelectAnswer = useCallback((answer: string) => {
+  const handleSelectAnswer = useCallback((answerIndex: number) => {
     if (!currentQuestion) return;
     setAnswers(prev => ({
       ...prev,
-      [currentQuestion.id]: answer,
+      [currentQuestion.id]: answerIndex,
     }));
   }, [currentQuestion]);
 
@@ -95,7 +95,9 @@ const Index = () => {
                 question={currentQuestion}
                 questionNumber={currentIndex + 1}
                 totalQuestions={questions.length}
-                selectedAnswer={answers[currentQuestion.id] || null}
+                selectedAnswer={
+                  typeof answers[currentQuestion.id] === 'number' ? answers[currentQuestion.id] : null
+                }
                 onSelectAnswer={handleSelectAnswer}
                 onPrevious={handlePrevious}
                 onNext={handleNext}

@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Question } from "@/lib/questionGenerator";
 import { ChevronLeft, ChevronRight, Send } from "lucide-react";
 
+
 interface QuestionCardProps {
   question: Question;
   questionNumber: number;
   totalQuestions: number;
-  selectedAnswer: string | null;
-  onSelectAnswer: (answer: string) => void;
+  selectedAnswer: number | null;
+  onSelectAnswer: (answerIndex: number) => void;
   onPrevious: () => void;
   onNext: () => void;
   onSubmit: () => void;
@@ -51,14 +52,13 @@ export const QuestionCard = ({
         {/* Options */}
         <div className="space-y-3">
           {question.options.map((option, index) => {
-            const isSelected = selectedAnswer === option;
-            
+            const isSelected = selectedAnswer === index;
             return (
               <Button
                 key={`${question.id}-${index}`}
                 variant={isSelected ? "optionSelected" : "option"}
                 className="w-full text-option p-4 h-auto"
-                onClick={() => onSelectAnswer(option)}
+                onClick={() => onSelectAnswer(index)}
               >
                 <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 transition-colors ${
                   isSelected 
