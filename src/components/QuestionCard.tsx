@@ -115,7 +115,7 @@ export const QuestionCard = ({
             variant="cta"
             size="lg"
             onClick={onSubmit}
-            disabled={!selectedAnswer}
+            disabled={selectedAnswer === null}
             className="flex-1 max-w-[140px]"
           >
             Submit
@@ -126,7 +126,7 @@ export const QuestionCard = ({
             variant="nav"
             size="lg"
             onClick={onNext}
-            disabled={!selectedAnswer}
+            disabled={selectedAnswer === null}
             className="flex-1 max-w-[140px]"
           >
             Next
