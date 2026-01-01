@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 
@@ -19,12 +19,12 @@ export function UserProfileFloating() {
 
       {/* Modal Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <Dialog.Content className="max-w-md w-full p-6 rounded-2xl">
-          <Dialog.Header>
-            <Dialog.Title className="text-2xl font-bold mb-2 flex items-center gap-2">
+        <DialogContent className="max-w-md w-full p-6 rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold mb-2 flex items-center gap-2">
               <User className="w-7 h-7 text-primary" /> My Profile
-            </Dialog.Title>
-          </Dialog.Header>
+            </DialogTitle>
+          </DialogHeader>
           <div className="space-y-2 text-base">
             <div><span className="font-semibold">Name:</span> Hari Krishna Anem</div>
             <div><span className="font-semibold">Phone:</span> <a href="tel:+919885699666" className="text-primary hover:underline">+91 9885699666</a></div>
@@ -36,12 +36,12 @@ export function UserProfileFloating() {
             <div><span className="font-semibold">Blog:</span> <a href="https://anemharikrishna.hashnode.dev" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Hashnode</a></div>
             <div><span className="font-semibold">Portfolio:</span> <a href="https://harikrishna.netlify.app" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">harikrishna.netlify.app</a></div>
           </div>
-          <Dialog.Footer className="mt-6 flex justify-end">
+          <DialogFooter className="mt-6 flex justify-end">
             <Button variant="secondary" onClick={() => setOpen(false)}>
               Close
             </Button>
-          </Dialog.Footer>
-        </Dialog.Content>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
     </>
   );
