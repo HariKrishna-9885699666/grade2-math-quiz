@@ -8,7 +8,6 @@ function generateMeasurementQuestions(count: number): QuestionTemplate[] {
       const a = Math.floor(Math.random() * 50) + 10;
       const b = Math.floor(Math.random() * 50) + 10;
       const unit = Math.random() > 0.5 ? "cm" : "m";
-      const correct = a > b ? "first" : "second";
       questions.push({
         question: `Which is longer: ${a} ${unit} or ${b} ${unit}?`,
         options: shuffleArray([
@@ -103,25 +102,140 @@ function generateShapesQuestions(count: number): QuestionTemplate[] {
 // Dynamic generator for Data Handling questions
 function generateDataHandlingQuestions(count: number): QuestionTemplate[] {
   const questions: QuestionTemplate[] = [];
+  const patterns = [
+    // Favorite color survey
+    () => {
+      const colors = ["red", "blue", "green", "yellow"];
+      const votes = colors.map(() => Math.floor(Math.random() * 10) + 1);
+      const max = Math.max(...votes);
+      const min = Math.min(...votes);
+      const maxIndex = votes.indexOf(max);
+      const minIndex = votes.indexOf(min);
+      return [
+        {
+          question: `In a class survey, ${votes[0]} students like red, ${votes[1]} like blue, ${votes[2]} like green, and ${votes[3]} like yellow. Which color is the most popular?`,
+          options: shuffleArray([colors[maxIndex], ...colors.filter((c, i) => i !== maxIndex)]),
+          correctAnswer: colors[maxIndex],
+        },
+        {
+          question: `In a class survey, ${votes[0]} students like red, ${votes[1]} like blue, ${votes[2]} like green, and ${votes[3]} like yellow. Which color is the least popular?`,
+          options: shuffleArray([colors[minIndex], ...colors.filter((c, i) => i !== minIndex)]),
+          correctAnswer: colors[minIndex],
+        },
+      ];
+    },
+    // Pets tally
+    () => {
+      const pets = ["dogs", "cats", "rabbits", "birds"];
+      const tallies = pets.map(() => Math.floor(Math.random() * 6) + 2);
+      const total = tallies.reduce((a, b) => a + b, 0);
+      return [
+        {
+          question: `A tally chart shows ${tallies[0]} dogs, ${tallies[1]} cats, ${tallies[2]} rabbits, and ${tallies[3]} birds. How many pets are there in total?`,
+          options: shuffleArray([
+            `${total}`,
+            `${total + 2}`,
+            `${total - 2}`,
+            `${total + 4}`
+          ]),
+          correctAnswer: `${total}`,
+        },
+        {
+          question: `A tally chart shows ${tallies[0]} dogs, ${tallies[1]} cats, ${tallies[2]} rabbits, and ${tallies[3]} birds. Which pet is the most?`,
+          options: shuffleArray([
+            pets[tallies.indexOf(Math.max(...tallies))],
+            ...pets.filter((p, i) => i !== tallies.indexOf(Math.max(...tallies)))
+          ]),
+          correctAnswer: pets[tallies.indexOf(Math.max(...tallies))],
+        },
+      ];
+    },
+    // Vehicles bar graph
+    () => {
+      const vehicles = ["cars", "bikes", "buses", "trucks"];
+      const counts = vehicles.map(() => Math.floor(Math.random() * 10) + 5);
+      const diff = Math.abs(counts[0] - counts[1]);
+      return [
+        {
+          question: `A bar graph shows ${counts[0]} cars, ${counts[1]} bikes, ${counts[2]} buses, and ${counts[3]} trucks. How many more cars than bikes are there?`,
+          options: shuffleArray([
+            `${diff}`,
+            `${diff + 1}`,
+            `${diff - 1}`,
+            `${diff + 2}`
+          ]),
+          correctAnswer: `${diff}`,
+        },
+        {
+          question: `A bar graph shows ${counts[0]} cars, ${counts[1]} bikes, ${counts[2]} buses, and ${counts[3]} trucks. Which vehicle is the least?`,
+          options: shuffleArray([
+            vehicles[counts.indexOf(Math.min(...counts))],
+            ...vehicles.filter((v, i) => i !== counts.indexOf(Math.min(...counts)))
+          ]),
+          correctAnswer: vehicles[counts.indexOf(Math.min(...counts))],
+        },
+      ];
+    },
+    // Favorite sport
+    () => {
+      const sports = ["cricket", "football", "basketball", "tennis"];
+      const votes = sports.map(() => Math.floor(Math.random() * 10) + 1);
+      const max = Math.max(...votes);
+      return [
+        {
+          question: `A survey shows ${votes[0]} like cricket, ${votes[1]} like football, ${votes[2]} like basketball, and ${votes[3]} like tennis. How many students were surveyed?`,
+          options: shuffleArray([
+            `${votes.reduce((a, b) => a + b, 0)}`,
+            `${votes.reduce((a, b) => a + b, 0) + 2}`,
+            `${votes.reduce((a, b) => a + b, 0) - 2}`,
+            `${votes.reduce((a, b) => a + b, 0) + 4}`
+          ]),
+          correctAnswer: `${votes.reduce((a, b) => a + b, 0)}`,
+        },
+        {
+          question: `A survey shows ${votes[0]} like cricket, ${votes[1]} like football, ${votes[2]} like basketball, and ${votes[3]} like tennis. Which sport is the most popular?`,
+          options: shuffleArray([
+            sports[votes.indexOf(max)],
+            ...sports.filter((s, i) => i !== votes.indexOf(max))
+          ]),
+          correctAnswer: sports[votes.indexOf(max)],
+        },
+      ];
+    },
+    // Simple pictogram
+    () => {
+      const animals = ["lions", "tigers", "bears", "zebras"];
+      const counts = animals.map(() => Math.floor(Math.random() * 5) + 1);
+      const total = counts.reduce((a, b) => a + b, 0);
+      return [
+        {
+          question: `A pictogram shows ${counts[0]} lions, ${counts[1]} tigers, ${counts[2]} bears, and ${counts[3]} zebras. How many animals are there in total?`,
+          options: shuffleArray([
+            `${total}`,
+            `${total + 1}`,
+            `${total - 1}`,
+            `${total + 2}`
+          ]),
+          correctAnswer: `${total}`,
+        },
+        {
+          question: `A pictogram shows ${counts[0]} lions, ${counts[1]} tigers, ${counts[2]} bears, and ${counts[3]} zebras. Which animal is the least?`,
+          options: shuffleArray([
+            animals[counts.indexOf(Math.min(...counts))],
+            ...animals.filter((a, i) => i !== counts.indexOf(Math.min(...counts)))
+          ]),
+          correctAnswer: animals[counts.indexOf(Math.min(...counts))],
+        },
+      ];
+    },
+  ];
+
   for (let i = 0; i < count; i++) {
-    // Simple tally/count question
-    const apples = Math.floor(Math.random() * 6) + 2;
-    const bananas = Math.floor(Math.random() * 6) + 2;
-    const oranges = Math.floor(Math.random() * 6) + 2;
-    const maxFruit = Math.max(apples, bananas, oranges);
-    const fruitNames = ["apples", "bananas", "oranges"];
-    const fruitCounts = [apples, bananas, oranges];
-    const maxIndex = fruitCounts.indexOf(maxFruit);
-    questions.push({
-      question: `A basket has ${apples} apples, ${bananas} bananas, and ${oranges} oranges. Which fruit is the most?`,
-      options: shuffleArray([
-        fruitNames[maxIndex],
-        fruitNames[(maxIndex+1)%3],
-        fruitNames[(maxIndex+2)%3],
-        "none"
-      ]),
-      correctAnswer: fruitNames[maxIndex]
-    });
+    // Pick a random pattern and a random question from that pattern
+    const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+    const qs = pattern();
+    const q = qs[Math.floor(Math.random() * qs.length)];
+    questions.push(q);
   }
   return questions;
 }

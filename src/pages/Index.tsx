@@ -144,7 +144,12 @@ const Index = () => {
         {appState === "results" && (
           <ResultsScreen
             questions={questions}
-            answers={answers}
+            answers={Object.fromEntries(
+              Object.entries(answers).map(([qid, idx]) => {
+                const q = questions.find(q => q.id === qid);
+                return [qid, q && typeof idx === 'number' ? q.options[idx] : 'Not answered'];
+              })
+            )}
             onRestart={handleRestart}
           />
         )}
